@@ -68,8 +68,11 @@ public class MyListAdapter extends ArrayAdapter<Article> {
 	            	    String imageUrl = item.getString("image");
 	            	    Article article = new Article(id, imageUrl);
 	            	    articles.add(article);
+	            	    //Log.i("Article", "index=" + i);
+	            	    System.out.println("test" + i);
+	            	    add(article);
+	            	    
 	            	}
-					addAll(articles);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -80,6 +83,13 @@ public class MyListAdapter extends ArrayAdapter<Article> {
 
                 // Do something with the response
                 System.out.println("test");
+            }
+            
+            @Override
+            public void onFailure(String responseBody, Throwable error) {
+            	// TODO Auto-generated method stub
+            	
+            	super.onFailure(responseBody, error);
             }
         });
     }
