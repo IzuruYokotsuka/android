@@ -1,6 +1,12 @@
 package com.example.test;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.*;
+
+import com.loopj.android.http.*;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -38,7 +44,45 @@ public class MyListAdapter extends ArrayAdapter<Article> {
 			Article[] objects) {
 		super(context, resource, textViewResourceId, objects);
 		// TODO Auto-generated constructor stub
+		try {
+			getFashiolisatResults();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
+	
+    public void getFashiolisatResults() throws JSONException {
+        ApiClient.get("", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(JSONObject apiResponse) {
+                // Pull out the first event on the public timeline
+            	//apiResponse["items"]["image"]
+        		//apiResponse["items"]["id"]
+        		JSONArray items;
+        		List<Article> articles = new ArrayList<Article>();
+				try {
+					items = apiResponse.getJSONArray("items");
+					for (int i = 0; i < items.length(); ++i) {
+	            	    JSONObject item = items.getJSONObject(i);
+	            	    String id = item.getString("id");
+	            	    String imageUrl = item.getString("image");
+	            	    Article article = new Article(id, imageUrl);
+	            	    articles.add(article);
+	            	}
+					addAll(articles);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+            	
+                
+                //String tweetText = firstEvent.getString("text");
+
+                // Do something with the response
+                System.out.println("test");
+            }
+        });
+    }
 
 	/*
 	 * public MyListAdapter(Context context, int resource, int
