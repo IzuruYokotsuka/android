@@ -3,7 +3,7 @@ import com.loopj.android.http.*;
 
 
 public class ApiClient {
-	  private static final String BASE_URL = "http://iapi.fashiolista.com/api/loves/?user_token=p5xjnqfxt9anjnzpc4rufmqwydjvkw4z94udzb5pcvwkjvggxcj7dv8fkxfc9pc2&version=1&limit=2&debug=1&api_key=f31g233ncf125ydu87m0&type=everyone";
+	  private static final String BASE_URL = "http://iapi.fashiolista.com/api/loves/?user_token=p5xjnqfxt9anjnzpc4rufmqwydjvkw4z94udzb5pcvwkjvggxcj7dv8fkxfc9pc2&version=1&limit=20&api_key=f31g233ncf125ydu87m0&type=everyone";
 
 	  private static AsyncHttpClient client = new AsyncHttpClient();
 

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.json.*;
 
 import com.loopj.android.http.*;
@@ -41,57 +42,88 @@ public class MyListAdapter extends ArrayAdapter<Article> {
 	 */
 
 	public MyListAdapter(Context context, int resource, int textViewResourceId,
-			Article[] objects) {
+			List<Article> objects) {
 		super(context, resource, textViewResourceId, objects);
 		// TODO Auto-generated constructor stub
-		try {
-			getFashiolisatResults();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		getFashiolistaResults();
 	}
 	
-    public void getFashiolisatResults() throws JSONException {
-        ApiClient.get("", null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(JSONObject apiResponse) {
-                // Pull out the first event on the public timeline
-            	//apiResponse["items"]["image"]
-        		//apiResponse["items"]["id"]
-        		JSONArray items;
-        		List<Article> articles = new ArrayList<Article>();
-				try {
-					items = apiResponse.getJSONArray("items");
-					for (int i = 0; i < items.length(); ++i) {
-	            	    JSONObject item = items.getJSONObject(i);
-	            	    String id = item.getString("id");
-	            	    String imageUrl = item.getString("image");
-	            	    Article article = new Article(id, imageUrl);
+    public void getFashiolistaResults() {
+    	AsyncHttpClient client = new AsyncHttpClient();
+    	client.get("http://iapi.fashiolista.com/api/loves/?user_token=p5xjnqfxt9anjnzpc4rufmqwydjvkw4z94udzb5pcvwkjvggxcj7dv8fkxfc9pc2&version=1&limit=2&api_key=f31g233ncf125ydu87m0&type=everyone", new JsonAdapterResponseHandler(this) {
+    	    @Override
+    	    public void onSuccess(JSONObject apiResponse) {
+    	    	Log.i("NOTIFY", "Got some json");
+    	    	List<Article> articles = new ArrayList<Article>();
+    	    	try {
+    	    		JSONObject objectList = apiResponse.getJSONObject("object_list");
+    	    		JSONArray loves = objectList.getJSONArray("items");
+					for (int i = 0; i < loves.length(); ++i) {
+	            	    JSONObject love = loves.getJSONObject(i);
+	            	    String loveId = love.getString("id");
+	            	    JSONObject entity = love.getJSONObject("entity");
+	            	    String entityId = entity.getString("id");
+	            	    String imageUrl = entity.getString("image");
+	            	    Article article = new Article(loveId, imageUrl);
 	            	    articles.add(article);
-	            	    //Log.i("Article", "index=" + i);
-	            	    System.out.println("test" + i);
-	            	    add(article);
-	            	    
-	            	}
-				} catch (JSONException e) {
+					}
+					
+					mAdapter.addAll(articles);
+					mAdapter.notifyDataSetChanged();
+					Log.i("NOTIFY", "Data set changed");
+            	} catch (JSONException e) {
 					e.printStackTrace();
 				}
-
-            	
-                
-                //String tweetText = firstEvent.getString("text");
-
-                // Do something with the response
-                System.out.println("test");
-            }
-            
-            @Override
-            public void onFailure(String responseBody, Throwable error) {
-            	// TODO Auto-generated method stub
-            	
-            	super.onFailure(responseBody, error);
-            }
-        });
+    	    }
+    	    
+    	    @Override
+    	    public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+    	    		Throwable arg3) {
+    	    	// TODO Auto-generated method stub
+    	    	super.onFailure(arg0, arg1, arg2, arg3);
+    	    }
+    	});
+    	
+//        ApiClient.get("", null, new JsonHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(JSONObject apiResponse) {
+//                // Pull out the first event on the public timeline
+//            	//apiResponse["items"]["image"]
+//        		//apiResponse["items"]["id"]
+//        		JSONArray items;
+//        		List<Article> articles = new ArrayList<Article>();
+//				try {
+//					items = apiResponse.getJSONArray("items");
+//					for (int i = 0; i < items.length(); ++i) {
+//	            	    JSONObject item = items.getJSONObject(i);
+//	            	    String id = item.getString("id");
+//	            	    String imageUrl = item.getString("image");
+//	            	    Article article = new Article(id, imageUrl);
+//	            	    articles.add(article);
+//	            	    //Log.i("Article", "index=" + i);
+//	            	    System.out.println("test" + i);
+//	            	    add(article);
+//	            	    
+//	            	}
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//
+//            	
+//                
+//                //String tweetText = firstEvent.getString("text");
+//
+//                // Do something with the response
+//                System.out.println("test");
+//            }
+//            
+//            @Override
+//            public void onFailure(String responseBody, Throwable error) {
+//            	// TODO Auto-generated method stub
+//            	
+//            	super.onFailure(responseBody, error);
+//            }
+//        });
     }
 
 	/*
