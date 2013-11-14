@@ -3,6 +3,7 @@ package com.example.test;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.http.Header;
 import org.json.*;
@@ -42,7 +43,7 @@ public class MyListAdapter extends ArrayAdapter<Article> {
 	 */
 
 	public MyListAdapter(Context context, int resource, int textViewResourceId,
-			List<Article> objects) {
+			CopyOnWriteArrayList<Article> objects) {
 		super(context, resource, textViewResourceId, objects);
 		// TODO Auto-generated constructor stub
 		getFashiolistaResults();
@@ -54,7 +55,7 @@ public class MyListAdapter extends ArrayAdapter<Article> {
     	    @Override
     	    public void onSuccess(JSONObject apiResponse) {
     	    	Log.i("NOTIFY", "Got some json");
-    	    	List<Article> articles = new ArrayList<Article>();
+    	    	CopyOnWriteArrayList<Article> articles = new CopyOnWriteArrayList <Article>();
     	    	try {
     	    		JSONObject objectList = apiResponse.getJSONObject("object_list");
     	    		JSONArray loves = objectList.getJSONArray("items");
