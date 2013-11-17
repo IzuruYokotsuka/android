@@ -1,5 +1,9 @@
 package com.example.test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -70,10 +74,9 @@ public class ItemListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Article[] articles = {
-    		new Article("hi", "http://cdn.theatlantic.com/static/infocus/surf091411/s01_20153614.jpg"),
-    		new Article("hi2", "http://www.hdwallpapersinn.com/wp-content/uploads/2013/04/Snowboarding-1-O9744CPILB-1280x800.jpg")
-        };
+        CopyOnWriteArrayList<Article> articles = new CopyOnWriteArrayList<Article>();
+        articles.add(new Article("hi", "http://cdn.theatlantic.com/static/infocus/surf091411/s01_20153614.jpg"));
+        articles.add(new Article("hi2", "http://www.hdwallpapersinn.com/wp-content/uploads/2013/04/Snowboarding-1-O9744CPILB-1280x800.jpg"));
 
         // TODO: replace with a real list adapter.
         setListAdapter(new MyListAdapter(
