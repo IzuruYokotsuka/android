@@ -1,4 +1,6 @@
 package com.example.test;
+import android.util.Log;
+
 import com.loopj.android.http.*;
 
 
@@ -8,6 +10,7 @@ public class ApiClient {
 	  private static AsyncHttpClient client = new AsyncHttpClient();
 
 	  public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+		  Log.v("APICLIENT", "requesting:" + getAbsoluteUrl(url));
 	      client.get(getAbsoluteUrl(url), params, responseHandler);
 	  }
 

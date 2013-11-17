@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.*;
 
 import com.loopj.android.http.*;
+import com.squareup.picasso.Picasso;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -53,6 +54,7 @@ public class MyListAdapter extends ArrayAdapter<Article> {
 	
     public void getFashiolisatResults() throws JSONException {
         ApiClient.get("", null, new JsonHttpResponseHandler() {
+        	
             @Override
             public void onSuccess(JSONObject apiResponse) {
                 // Pull out the first event on the public timeline
@@ -110,18 +112,21 @@ public class MyListAdapter extends ArrayAdapter<Article> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
-		TextView textView = (TextView) rowView.findViewById(R.id.label);
-		ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+		View view = convertView;
+		// Reuse old views for performance
+		if (view == null) {
+			LayoutInflater inflater = (LayoutInflater) getContext()
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			view = inflater.inflate(R.layout.rowlayout, parent, false);
+	    }
+		TextView textView = (TextView) view.findViewById(R.id.label);
+		ImageView imageView = (ImageView) view.findViewById(R.id.icon);
 		Article article = getItem(position);
 		textView.setText(article.mTitle);
+		
+		Picasso.with(getContext()).load(article.mImageUrl).into(imageView);
 
-		new DownloadImageTask((ImageView) imageView)
-				.execute(article.mImageUrl);
-
-		return rowView;
+		return view;
 	}
 
 }
