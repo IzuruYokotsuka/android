@@ -116,7 +116,6 @@ public class LoginActivity extends Activity {
 		
 		// get some extra permissions
 		LoginButton authButton = (LoginButton) findViewById(R.id.authButton);
-		authButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
 		
 		// listen to the facebook login
 	    uiHelper = new UiLifecycleHelper(this, callback);
