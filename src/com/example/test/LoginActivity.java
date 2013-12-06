@@ -1,19 +1,28 @@
 package com.example.test;
 
+import java.util.Arrays;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.LoginButton;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -27,6 +36,21 @@ public class LoginActivity extends Activity {
 	private static final String[] DUMMY_CREDENTIALS = new String[] {
 			"foo@example.com:hello", "bar@example.com:world" };
 
+	private Session.StatusCallback callback = new Session.StatusCallback() {
+	    @Override
+	    public void call(Session session, SessionState state, Exception exception) {
+	        onSessionStateChange(session, state, exception);
+	    }
+	};
+	
+	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+	    if (state.isOpened()) {
+	        Log.i("Fashiolista", "Logged in...");
+	    } else if (state.isClosed()) {
+	        Log.i("Fashiolista", "Logged out...");
+	    }
+	};
+	
 	/**
 	 * The default email to populate the email field with.
 	 */
@@ -47,6 +71,37 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+	private UiLifecycleHelper uiHelper;
+	
+	@Override
+	public void onResume() {
+	    super.onResume();
+	    uiHelper.onResume();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    uiHelper.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
+	public void onPause() {
+	    super.onPause();
+	    uiHelper.onPause();
+	}
+
+	@Override
+	public void onDestroy() {
+	    super.onDestroy();
+	    uiHelper.onDestroy();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+	    super.onSaveInstanceState(outState);
+	    uiHelper.onSaveInstanceState(outState);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +113,14 @@ public class LoginActivity extends Activity {
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
+		
+		// get some extra permissions
+		LoginButton authButton = (LoginButton) findViewById(R.id.authButton);
+		authButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
+		
+		// listen to the facebook login
+	    uiHelper = new UiLifecycleHelper(this, callback);
+	    uiHelper.onCreate(savedInstanceState);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView

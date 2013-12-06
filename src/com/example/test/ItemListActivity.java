@@ -215,8 +215,8 @@ public class ItemListActivity extends FragmentActivity
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
-            Intent detailIntent = new Intent(this, FullscreenActivity.class);
-            detailIntent.putExtra(FullscreenActivity.ARG_ITEM_ID, id);
+            Intent detailIntent = new Intent(this, LoginActivity.class);
+            // detailIntent.putExtra(FullscreenActivity.ARG_ITEM_ID, id);
             startActivity(detailIntent);
         }
     }
